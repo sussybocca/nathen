@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nathen AI</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background-color: #0f172a;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #38bdf8;
+      margin-bottom: 1rem;
+    }
+    #prompt {
+      width: 100%;
+      max-width: 600px;
+      height: 100px;
+      padding: 1rem;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      background-color: #1e293b;
+      color: #e2e8f0;
+      resize: none;
+    }
+    button {
+      background-color: #38bdf8;
+      color: #0f172a;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background-color: #0ea5e9;
+    }
+    #response {
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 600px;
+      white-space: pre-wrap;
+      background-color: #1e293b;
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+    }
+    footer {
+      margin-top: auto;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤖 Nathen AI</h1>
+  <textarea id="prompt" placeholder="Ask anything..."></textarea>
+  <button id="send">Send</button>
+
+  <div id="response"></div>
+
+  <footer>Powered by Hugging Face Models • Built with Python & Netlify</footer>
+
+  <script>
+    document.getElementById("send").onclick = async () => {
+      const prompt = document.getElementById("prompt").value.trim();
+      const responseBox = document.getElementById("response");
+
+      if (!prompt) {
+        responseBox.textContent = "Please enter a question first.";
+        return;
+      }
+
+      responseBox.textContent = "Thinking... 🤔";
+
+      try {
+        const res = await fetch("/.netlify/functions/query_ai", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+        const data = await res.json();
+
+        if (data.error) {
+          responseBox.textContent = "⚠️ Error: " + data.error;
+        } else {
+          const text = Array.isArray(data)
+            ? data[0]?.generated_text || JSON.stringify(data, null, 2)
+            : JSON.stringify(data, null, 2);
+          responseBox.textContent = text;
+        }
+      } catch (err) {
+        responseBox.textContent = "⚠️ Error connecting to AI API: " + err.message;
+      }
+    };
+  </script>
+</body>
+</html>
