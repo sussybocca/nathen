@@ -1,0 +1,13 @@
+[build]
+  publish = "."
+  functions = "functions"
+
+# Optional: environment setup for Python
+[functions]
+  runtime = "python3.9"
+
+# Redirect all requests to index.html (for SPA behavior)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
