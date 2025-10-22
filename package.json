@@ -1,0 +1,13 @@
+{
+  "name": "nathen-ai",
+  "version": "1.0.0",
+  "description": "Nathen — AI web app using Hugging Face models and Python Netlify Functions.",
+  "author": "Your Name",
+  "license": "MIT",
+  "scripts": {
+    "start": "netlify dev",
+    "build": "echo 'No build step required for static site'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
